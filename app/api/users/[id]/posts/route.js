@@ -5,10 +5,14 @@ export const GET = async (req, {params}) => {
     
     try {
         await connectToTB();
-        console.log(params);
         const prompts = await Prompt.find({creator : params.id}).populate('creator');
 
-        return new Response(JSON.stringify(prompts),{ status:201 })
+        if(prompts.length === 0){
+            return new Response(JSON.stringify({'message': 'Data is empty', 'status':300,}) ,{ status:300 })
+        }
+        else{
+            return new Response(JSON.stringify({'result' : prompts, 'status':200,}) ,{ status:200 })
+        }
         
     } catch (error) {
         return new Response("Failed to Fetch all prompt",{ status:500 })

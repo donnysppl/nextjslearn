@@ -1,6 +1,6 @@
 import Promtcard from "./Promtcard";
 
-export default function Profile({name, disc, data, handleEdit, handleDelete}) {
+export default function Profile({name, disc, data, handleEdit, handleDelete, loader}) {
   return (
     <section className="w-full">
       <h1 className="head_text text-left">
@@ -10,12 +10,13 @@ export default function Profile({name, disc, data, handleEdit, handleDelete}) {
 
       <div className="mt-16 prompt_layout">
       {
+        !loader ?
         data && data.map((item,index)=> (
           <Promtcard 
             key={index} post={item} handleEdit={() => handleEdit && handleEdit(item)}
             handleDelete={() => handleDelete && handleDelete(item)}
           />
-        ))
+        )) : "Loader ..."
       }
     </div>
     </section>

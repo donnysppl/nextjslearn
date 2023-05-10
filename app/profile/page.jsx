@@ -9,14 +9,34 @@ export default function Profile() {
   const {userSession, userSessionId, router} = Common();
 
     const [userPost, setuserPost] = useState([]);
+    const [loader, setloader] = useState(true);
 
     useEffect(() => {
      const fetchPosts = async () => {
-        const response = await fetch(`/api/users/${userSession?.user.id}/posts`);
-        const data = await response.json();
-        setuserPost(data);
+      await fetch(`/api/users/${userSession?.user.id}/posts`, {
+        method: 'GET',
+      }).then(res => res.json())
+        .then(res => {
+          console.log(res);
+          if (res.status === 200) {
+            setuserPost(res.result);
+            setloader(false);
+          }
+          else if (res.status === 300){
+            alert(res.message);
+          }
+          else {
+            alert(res.message);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+        // const response = await fetch(`/api/users/${userSession?.user.id}/posts`);
+        // const data = await response.json();
+        // setuserPost(data);
      }
-     if(userSession?.user.id) fetchPosts();
+     fetchPosts();
     }, [])
 
     const handleEdit = async (data) => {
@@ -44,7 +64,7 @@ export default function Profile() {
 
   return (
    <ProfileComp
-    name="My" disc="Welcome to your personalized profile page"
+    name="My" disc="Welcome to your personalized profile page" loader={loader}
     data={userPost} handleEdit={handleEdit} handleDelete={handleDelete}
    />
   )
